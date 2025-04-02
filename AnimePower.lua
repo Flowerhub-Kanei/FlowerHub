@@ -1,5 +1,3 @@
---Made by : https://v3rmillion.net/member.php?action=profile&uid=507120
---Go vouch release thread : https://v3rmillion.net/showthread.php?tid=1040650
 
 local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
 
