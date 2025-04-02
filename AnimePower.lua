@@ -5,9 +5,27 @@ local window = library:CreateWindow("Floral Hub V3") -- Creates the window
 
 local fold = window:CreateFolder("Main") -- Creates the folder(U will put here your buttons,etc)
 
+local function attack()
+local args = {
+    [1] = "attack"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("events"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+end
+
 flod:Toggle("Auto Attack (Click)",function(bool)
     attackk = bool
     print("Auto Attack:", attackk) --
+end)
+
+spawn(function()
+ while task.wait() do
+   pcall(function()
+    if attackk then
+       attack()
+    end
+end)
+end
 end)
 
 b:Label("x2Swiftz",{
