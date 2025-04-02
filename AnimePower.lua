@@ -3,9 +3,9 @@
 
 local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
 
-local w = library:CreateWindow("KUY") -- Creates the window
+local window = library:CreateWindow("Floral Hub V3") -- Creates the window
 
-local b = w:CreateFolder("B") -- Creates the folder(U will put here your buttons,etc)
+local fold = window:CreateFolder("Main") -- Creates the folder(U will put here your buttons,etc)
 
 b:Label("x2Swiftz",{
     TextSize = 25; -- Self Explaining
