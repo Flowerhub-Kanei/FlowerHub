@@ -9,7 +9,7 @@ local fold = window:CreateFolder("Main") -- Creates the folder(U will put here y
 
 flod:Toggle("Auto Attack (Click)",function(bool)
     attackk = bool
-    print("Auto Attack") ...attackk
+    print("Auto Attack:", attackk) --
 end)
 
 b:Label("x2Swiftz",{
