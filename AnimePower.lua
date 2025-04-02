@@ -38,46 +38,29 @@ b:Button("Button",function()
     print("Elym Winning")
 end)
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local enemiesFolder = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Enemies")
+local rs = game:GetService("ReplicatedStorage")
+local enf = rs:WaitForChild("Assets"):WaitForChild("Enemies")
 
 local enemyNames = {}
 
--- Function to update the enemy list
 local function updateEnemies()
-    enemyNames = {} -- Reset list
-    for _, enemy in pairs(enemiesFolder:GetChildren()) do
+    enemyNames = {} -- มันต้องป่าววะไม่รู้
+    for _, enemy in pairs(enf:GetChildren()) do
         table.insert(enemyNames, enemy.Name)
     end
 end
-
--- Initial enemy list update
 updateEnemies()
 
--- Auto-update when enemies spawn or despawn
-enemiesFolder.ChildAdded:Connect(updateEnemies)
-enemiesFolder.ChildRemoved:Connect(updateEnemies)
+enf.ChildAdded:Connect(updateEnemies)
+enf.ChildRemoved:Connect(updateEnemies)
 
--- Wait a moment to ensure enemy list updates before creating the dropdown
 task.wait(1)
 
-fold:Dropdown("Select Enemy", enemyNames, true, function(selectedEnemy)
-    print("Selected Enemy:", selectedEnemy)
+fold:Dropdown("Select Mob", enemyNames, true, function(selectedEnemy)
+    print("Selected Mob:", selectedEnemy)
 end) 
 
-b:Bind("Bind",Enum.KeyCode.C,function() --Default bind
-    print("Yes")
-end)
 
-b:ColorPicker("ColorPicker",Color3.fromRGB(255,0,0),function(color) --Default color
-    print(color)
-end)
-
-b:Box("Box","number",function(value) -- "number" or "string"
-    print(value)
-end)
-
-b:DestroyGui()
 
 --[[
 How to refresh a dropdown:
