@@ -38,17 +38,32 @@ b:Button("Button",function()
     print("Elym Winning")
 end)
 
-b:Slider("Slider",{
-    min = 10; -- min value of the slider
-    max = 50; -- max value of the slider
-    precise = true; -- max 2 decimals
-},function(value)
-    print(value)
-end)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local enemiesFolder = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Enemies")
 
-b:Dropdown("Dropdown",{"A","B","C"},true,function(mob) --true/false, replaces the current title "Dropdown" with the option that t
-    print(mob)
-end)
+local enemyNames = {}
+
+-- Function to update the enemy list
+local function updateEnemies()
+    enemyNames = {} -- Reset list
+    for _, enemy in pairs(enemiesFolder:GetChildren()) do
+        table.insert(enemyNames, enemy.Name)
+    end
+end
+
+-- Initial enemy list update
+updateEnemies()
+
+-- Auto-update when enemies spawn or despawn
+enemiesFolder.ChildAdded:Connect(updateEnemies)
+enemiesFolder.ChildRemoved:Connect(updateEnemies)
+
+-- Wait a moment to ensure enemy list updates before creating the dropdown
+task.wait(1)
+
+fold:Dropdown("Select Enemy", enemyNames, true, function(selectedEnemy)
+    print("Selected Enemy:", selectedEnemy)
+end) 
 
 b:Bind("Bind",Enum.KeyCode.C,function() --Default bind
     print("Yes")
