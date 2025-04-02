@@ -7,6 +7,11 @@ local window = library:CreateWindow("Floral Hub V3") -- Creates the window
 
 local fold = window:CreateFolder("Main") -- Creates the folder(U will put here your buttons,etc)
 
+flod:Toggle("Auto Attack (Click)",function(bool)
+    attackk = bool
+    print("Auto Attack") ...attackk
+end)
+
 b:Label("x2Swiftz",{
     TextSize = 25; -- Self Explaining
     TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
@@ -16,11 +21,6 @@ b:Label("x2Swiftz",{
 
 b:Button("Button",function()
     print("Elym Winning")
-end)
-
-flod:Toggle("Toggle",function(bool)
-    shared.toggle = bool
-    print(shared.toggle)
 end)
 
 b:Slider("Slider",{
