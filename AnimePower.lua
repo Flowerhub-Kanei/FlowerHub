@@ -27,8 +27,7 @@ spawn(function()
 end)
 end
 end)
-
-b:Label("x2Swiftz",{
+fold:Label("Auto Farm",{
     TextSize = 25; -- Self Explaining
     TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
     BgColor = Color3.fromRGB(69,69,69); -- Self Explaining
