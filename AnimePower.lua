@@ -18,7 +18,7 @@ b:Button("Button",function()
     print("Elym Winning")
 end)
 
-b:Toggle("Toggle",function(bool)
+flod:Toggle("Toggle",function(bool)
     shared.toggle = bool
     print(shared.toggle)
 end)
