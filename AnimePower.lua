@@ -18,8 +18,6 @@ spawn(function()
     end
 end)
 
-fld:Label("Auto Farm", { TextSize = 25, TextColor = Color3.fromRGB(255,255,255), BgColor = Color3.fromRGB(69,69,69) })
-
 local rs = game:GetService("ReplicatedStorage")
 local enf = rs:WaitForChild("Assets"):WaitForChild("Enemies")
 local py = game:GetService("Players").LocalPlayer
@@ -27,6 +25,9 @@ local char = py.Character or py.CharacterAdded:Wait()
 local hrp = char:WaitForChild("HumanoidRootPart")
 
 local enList = {}
+for _, en in pairs(enf:GetChildren()) do
+    table.insert(enList, en.Name)
+end
 
 local selEn = nil
 local enDrop = fld:Dropdown("Select Mob", enList, true, function(mob)
@@ -34,27 +35,10 @@ local enDrop = fld:Dropdown("Select Mob", enList, true, function(mob)
     print("Selected Mob:", mob)
 end)
 
-local function updEn()
-    enList = {}
-    for _, en in pairs(enf:GetChildren()) do
-        table.insert(enList, en.Name)
-    end
-    enDrop:Refresh(enList)
-end
-
-updEn() ----อันนี้กุขก.เลยใช้gpt
-enf.ChildAdded:Connect(updEn)
-enf.ChildRemoved:Connect(updEn)
-
-local targetnow = nil
 local function killmontp()
     if selEn then
-        if targetnow and targetnow.Parent then
-            return
-        end
         for _, en in pairs(enf:GetChildren()) do
             if en.Name == selEn and en.PrimaryPart then
-                currentTarget = en
                 hrp.CFrame = en.PrimaryPart.CFrame + Vector3.new(0, 5, 0)
                 return
             end
