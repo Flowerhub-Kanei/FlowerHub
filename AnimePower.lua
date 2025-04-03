@@ -41,7 +41,7 @@ enf.ChildAdded:Connect(updEn)
 enf.ChildRemoved:Connect(updEn)
 
 local selEn = nil
-fld:Dropdown("Select Mob", enList, true, function(mob)
+local enDrop = fld:Dropdown("Select Mob", enList, true, function(mob)
     selEn = mob
     print("Selected Mob:", mob)
 end)
