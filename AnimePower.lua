@@ -121,25 +121,88 @@ AnimateLoader()
 
 -----------under is code upper is loader
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/turtle"))()
+local FloralHub = library:Window("Floral Hub V3")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local EnemyFolder = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Enemies")
+local SelectedEnemy = nil
+local EnemyNames = {}
+local TeleportCooldown = 0.3
+local LastTeleport = 0
 
-local OwO = library:Window("Floral Hub V3") local selEn = nil local teleportCooldown = 0.5
+for _, enemy in pairs(EnemyFolder:GetChildren()) do
+    table.insert(EnemyNames, enemy.Name)
+end
 
-local rs = game:GetService("ReplicatedStorage") local enf = rs:WaitForChild("Assets"):WaitForChild("Enemies") local py = game:GetService("Players").LocalPlayer local char = py.Character or py.CharacterAdded:Wait() local hrp = char:WaitForChild("HumanoidRootPart")
+FloralHub:Toggle("Auto Attack (Click)", false, function(state)
+    AutoAttack = state
+    print("Auto Attack:", state)
+end)
 
-local enList = {} for _, en in pairs(enf:GetChildren()) do table.insert(enList, en.Name) end
+spawn(function()
+    while task.wait() do
+        if AutoAttack then
+            ReplicatedStorage:WaitForChild("Shared"):WaitForChild("events"):WaitForChild("RemoteEvent"):FireServer("attack")
+        end
+    end
+end)
 
-OwO:Toggle("Auto Attack (Click)", false, function(state) atkTgl = state print("Auto Attack:", atkTgl) end)
+FloralHub:Dropdown("Select Mob", EnemyNames, function(mobName)
+    SelectedEnemy = mobName
+    print("Selected Mob:", mobName)
+end)
 
-spawn(function() while task.wait() do if atkTgl then game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("events"):WaitForChild("RemoteEvent"):FireServer("attack") end end end)
+local function TeleportToEnemy()
+    if not SelectedEnemy then return end
+    
+    local currentTime = os.time()
+    if currentTime - LastTeleport < TeleportCooldown then return end
+    
+    local closestEnemy = nil
+    local shortestDistance = math.huge
+    
+    for _, enemy in pairs(EnemyFolder:GetChildren()) do
+        if enemy.Name == SelectedEnemy and enemy:FindFirstChild("PrimaryPart") then
+            local distance = (HumanoidRootPart.Position - enemy.PrimaryPart.Position).Magnitude
+            if distance < shortestDistance then
+                shortestDistance = distance
+                closestEnemy = enemy
+            end
+        end
+    end
+    
+    if closestEnemy then
+        HumanoidRootPart.CFrame = closestEnemy.PrimaryPart.CFrame
+        LastTeleport = currentTime
+    else
+        warn("Target enemy not found!")
+    end
+end
 
-OwO:Dropdown("Select Mob", enList, function(mob) selEn = mob print("Selected Mob:", mob) end)
+FloralHub:Toggle("Auto Teleport to Enemy", false, function(state)
+    AutoTeleport = state
+    while AutoTeleport do
+        TeleportToEnemy()
+        task.wait(0.1)
+    end
+end)
 
-local lastTeleport = 0
+spawn(function()
+    while task.wait(3) do
+        local newEnemyList = {}
+        for _, enemy in pairs(EnemyFolder:GetChildren()) do
+            if not table.find(newEnemyList, enemy.Name) then
+                table.insert(newEnemyList, enemy.Name)
+            end
+        end
+        EnemyNames = newEnemyList
+    end
+end)
 
-local function killmontp() if not selEn then return end if os.time() - lastTeleport < teleportCooldown then return end local currentEnemies = enf:GetChildren() local targetEnemy = nil local shortestDistance = math.huge for _, en in pairs(currentEnemies) do if en.Name == selEn and en.PrimaryPart then local distance = (hrp.Position - en.PrimaryPart.Position).Magnitude if distance < shortestDistance then shortestDistance = distance targetEnemy = en end end end if targetEnemy then hrp.Parent:PivotTo(targetEnemy.PrimaryPart.CFrame) lastTeleport = os.time() else warn("Enemy Not Found") end end
+FloralHub:Label("Credits to Floral Hub", Color3.fromRGB(127, 143, 166))
 
-OwO:Toggle("Auto Teleport to Enemy", false, function(state) autoTP = state while autoTP do killmontp() task.wait(0.1) end end)
-
-spawn(function() while task.wait(3) do enList = {} for _, en in pairs(enf:GetChildren()) do if not table.find(enList, en.Name) then table.insert(enList, en.Name) end end end end)
-
-OwO:Label("Credits to Floral Hub", Color3.fromRGB(127, 143, 166))
+print("Floral Hub V3 loaded successfully!")
