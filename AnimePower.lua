@@ -23,7 +23,7 @@ fld:Label("Auto Farm", { TextSize = 25, TextColor = Color3.fromRGB(255,255,255),
 local rs = game:GetService("ReplicatedStorage")
 local enf = rs:WaitForChild("Assets"):WaitForChild("Enemies")
 local py = game:GetService("Players").LocalPlayer
-local char = py.Character or py.CharacterAdded:Wait()
+local char = py.Character 
 local hrp = char:WaitForChild("HumanoidRootPart")
 
 local enList = {}
