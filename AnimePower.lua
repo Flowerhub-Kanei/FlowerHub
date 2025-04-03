@@ -1,6 +1,22 @@
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local localPlayer = Players.LocalPlayer
+local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local enemyFolder = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Enemies")
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/turtle"))()
 local FloralHub = library:Window("Floral Hub V3")
+
+local selectedEnemyName = nil
+local teleportCooldown = 0.5
+local lastTeleportTime = 0
+local autoAttackEnabled = false
+local autoTeleportEnabled = false
+local noClipEnabled = false
 
 local enemyNames = {}
 for _, enemy in pairs(enemyFolder:GetChildren()) do
@@ -33,7 +49,7 @@ local function teleportToEnemy()
         warn("No enemy selected!")
         return
     end
-    if tick() - lastTeleportTime < teleportCooldown then return end
+    if os.clock() - lastTeleportTime < teleportCooldown then return end
 
     local closestEnemy = nil
     local shortestDistance = math.huge
@@ -53,11 +69,11 @@ local function teleportToEnemy()
         toggleNoClip(true)
         local tweenInfo = TweenInfo.new(0.75, Enum.EasingStyle.Linear)
         local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = closestEnemy.CFrame})
+        tween:Play()
         tween.Completed:Connect(function()
             toggleNoClip(false)
         end)
-        tween:Play()
-        lastTeleportTime = tick()
+        lastTeleportTime = os.clock()
     else
         warn("Enemy not found!")
     end
@@ -65,10 +81,12 @@ end
 
 FloralHub:Toggle("Auto Teleport to Enemy", false, function(state)
     autoTeleportEnabled = state
-    while autoTeleportEnabled do
-        teleportToEnemy()
-        task.wait(0.5)
-    end
+    spawn(function()
+        while autoTeleportEnabled do
+            teleportToEnemy()
+            task.wait(0.5)
+        end
+    end)
 end)
 
 FloralHub:Toggle("Auto Attack (Click)", false, function(state)
@@ -78,7 +96,7 @@ end)
 
 spawn(function()
     while true do
-        task.wait()
+        task.wait(0.1)
         if autoAttackEnabled then
             ReplicatedStorage:WaitForChild("Shared"):WaitForChild("events"):WaitForChild("RemoteEvent"):FireServer("attack")
         end
