@@ -46,10 +46,16 @@ fld:Dropdown("Select Mob", enList, true, function(mob)
     print("Selected Mob:", mob)
 end)
 
+
+local targetnow = nil
 local function killmontp()
     if selEn then
+        if targetnow and targetnow.Parent then
+            return
+        end
         for _, en in pairs(enf:GetChildren()) do
             if en.Name == selEn and en.PrimaryPart then
+                currentTarget = en
                 hrp.CFrame = en.PrimaryPart.CFrame + Vector3.new(0, 5, 0)
                 return
             end
