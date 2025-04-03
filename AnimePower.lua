@@ -28,6 +28,12 @@ local hrp = char:WaitForChild("HumanoidRootPart")
 
 local enList = {}
 
+local selEn = nil
+local enDrop = fld:Dropdown("Select Mob", enList, true, function(mob)
+    selEn = mob
+    print("Selected Mob:", mob)
+end)
+
 local function updEn()
     enList = {}
     for _, en in pairs(enf:GetChildren()) do
@@ -39,13 +45,6 @@ end
 updEn() ----อันนี้กุขก.เลยใช้gpt
 enf.ChildAdded:Connect(updEn)
 enf.ChildRemoved:Connect(updEn)
-
-local selEn = nil
-local enDrop = fld:Dropdown("Select Mob", enList, true, function(mob)
-    selEn = mob
-    print("Selected Mob:", mob)
-end)
-
 
 local targetnow = nil
 local function killmontp()
