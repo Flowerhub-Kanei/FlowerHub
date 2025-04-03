@@ -131,6 +131,19 @@ local rs = game:GetService("ReplicatedStorage") local enf = rs:WaitForChild("Ass
 
 local enList = {} for _, en in pairs(enf:GetChildren()) do table.insert(enList, en.Name) end
 
+OwO:Toggle("Auto Attack (Click)", false, function(state)
+    atkTgl = state
+    print("Auto Attack:", atkTgl)
+end)
+
+spawn(function()
+    while task.wait() do
+        if atkTgl then
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("events"):WaitForChild("RemoteEvent"):FireServer("attack")
+        end
+    end
+end)
+
 OwO:Dropdown("Select Mob", enList, function(mob) 
         selEn = mob 
         print("Selected Mob:", mob) 
@@ -140,7 +153,7 @@ local function killmontp()
     if selEn then 
         for _, en in pairs(enf:GetChildren()) do 
             if en.Name == selEn and en.PrimaryPart then 
-                hrp.CFrame = en.PrimaryPart.CFrame + Vector3.new(0, 5, 0) 
+                hrp.CFrame = en.PrimaryPart.CFrame
                 return 
             end 
         end 
